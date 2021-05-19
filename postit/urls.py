@@ -9,6 +9,7 @@ urlpatterns = [
     path('del_all', views.del_all, name = "del_all"),
     path('mark_all', views.mark_all, name = "mark_all"),
     path('unmark_all', views.unmark_all, name = "unmark_all"),
+    path('update_note', views.update_note, name = "update_note"),
 ]
 
 

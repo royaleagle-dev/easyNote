@@ -8,10 +8,10 @@ Home
 <div class = "note-wrapper" style = "overflow-y:scroll;">
 
     {% for items in notes %}
-    <div class = "note">
+    <div class = "note" onclick = "open_edit_panel('{{items.id}}')">
         <div {%if items.status == 'm'%} style = "text-decoration:line-through;"{%endif%}>
-            <p>{{items.alias}}</p>
-            <p>{{items.note}}</p>
+            <p id = "alias-{{items.id}}">{{items.alias}}</p>
+            <p id = "note-{{items.id}}">{{items.note}}</p>
         </div>
         <hr>
         <small style = "display:inline;float:right;">{{items.date_posted}}</small>
@@ -23,6 +23,28 @@ Home
 
 {%block other_js%}
 <script>
+
+    const update_btn = document.querySelector("#update-btn");
+    const edit_wrapper =  document.querySelector(".edit-panel-wrapper")
+
+    function open_edit_panel(data_id){
+        edit_wrapper.style.display = "block";
+        const id = data_id
+        const alias = document.querySelector(`#alias-${id}`);
+        const note = document.querySelector(`#note-${id}`);
+        const alias_upd = document.querySelector('#alias-upd').value = alias.textContent;
+        const note_upd = document.querySelector('#note-upd').value = note.textContent;
+        document.querySelector('#id').value = data_id;
+        //console.log(alias);
+    }
+
+    function update(){
+        edit_wrapper.style.display = "none";
+    }
+
+    updadte_btn.addEventListener('click', updadte);
+
+
     
 </script>
 {%endblock%}

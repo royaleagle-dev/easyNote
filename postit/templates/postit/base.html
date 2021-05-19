@@ -11,13 +11,15 @@
     </head>
     <body>
         <div class = "container">
-            <div class = "edit-panel-wrapper">
+            <div class = "edit-panel-wrapper" style = "display:none;">
                 <div class = "edit-panel">
-                    <h
-                    <form>
-                        <input type = "text" name = "alias">
-                        <input type = "text" name = "note">
-                        <input type = "hidden" name = "id">
+                    <h3 style = "color:white;text-align:center;">Edit Note</h3>
+                    <form method = "POST" action = "{%url 'postit:update_note'%}">
+                        {%csrf_token%}
+                        <input type = "text" name = "alias" id = "alias-upd">
+                        <input type = "text" name = "note" id = "note-upd">
+                        <input type = "hidden" name = "id" id = "id">
+                        <button id = "update-btn" type = "submit" class = "btn-block btn" style = "background-color:darkgreen;border:2px dashed white;">Update Note</button>
                     </form>
                 </div>
             </div>
