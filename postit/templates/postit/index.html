@@ -1,0 +1,28 @@
+{% extends 'postit/base.html'%}
+
+{%block title%}
+Home
+{%endblock%}
+
+{%block content%}
+<div class = "note-wrapper" style = "overflow-y:scroll;">
+
+    {% for items in notes %}
+    <div class = "note">
+        <div {%if items.status == 'm'%} style = "text-decoration:line-through;"{%endif%}>
+            <p>{{items.alias}}</p>
+            <p>{{items.note}}</p>
+        </div>
+        <hr>
+        <small style = "display:inline;float:right;">{{items.date_posted}}</small>
+    </div>
+    {%endfor%}
+
+</div>
+{%endblock%}
+
+{%block other_js%}
+<script>
+    
+</script>
+{%endblock%}
