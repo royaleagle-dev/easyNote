@@ -5,46 +5,56 @@ Home
 {%endblock%}
 
 {%block content%}
-<div class = "note-wrapper" style = "overflow-y:scroll;">
-
-    {% for items in notes %}
-    <div class = "note" onclick = "open_edit_panel('{{items.id}}')">
-        <div {%if items.status == 'm'%} style = "text-decoration:line-through;"{%endif%}>
-            <p id = "alias-{{items.id}}">{{items.alias}}</p>
-            <p id = "note-{{items.id}}">{{items.note}}</p>
+<div style = "margin-top:10px;">
+{% for note in notes%}
+<div style = "background:lightgrey;">
+    <div style = "padding:10px;margin-bottom:5px;" id = "main-{{note.id}}" onclick = "openDetail('detail-{{note.id}}')">
+        <div>
+            <span {% if note.status == 'm'%} style = "text-decoration:line-through;font-weight:bold;" {% endif %}>{{note.alias}}</span>
+            <a href = "{% url 'postit:delete_note' note.id%}" class = ""><span class = "fas fa-trash menu-link" style = "float:right;"></span></a>
+            <a href = "javascript:void(0)" class = "" id = "edit-{{note.id}}" data-alias = "{{note.alias}}" data-note = "{{note.note}}" onclick = "openEdit('edit-{{note.id}}')"><span class = "fas fa-pen menu-link" style = "float:right;"></span></a>
+            <a href = "{% url 'postit:mark_note' note.id %}" class = ""><span class = "fas fa-check menu-link" style = "float:right;"></span></a>
         </div>
-        <hr>
-        <small style = "display:inline;float:right;">{{items.date_posted}}</small>
+        <hr align = "left" style = "width:45%;border-bottom:.25px solid grey;">
     </div>
-    {%endfor%}
-
+    <div style = "padding:10px;display:none;margin-bottom:5px;" id = "detail-{{note.id}}" class = "note-detail">
+        <small>{{note.note}}</small>
+    </div>
 </div>
+{% endfor %}
+</div>
+
 {%endblock%}
 
-{%block other_js%}
+{% block otherJS%}
 <script>
+    const elements = document.querySelectorAll(".note-detail");
 
-    const update_btn = document.querySelector("#update-btn");
-    const edit_wrapper =  document.querySelector(".edit-panel-wrapper")
+    //console.log(elements)
 
-    function open_edit_panel(data_id){
-        edit_wrapper.style.display = "block";
-        const id = data_id
-        const alias = document.querySelector(`#alias-${id}`);
-        const note = document.querySelector(`#note-${id}`);
-        const alias_upd = document.querySelector('#alias-upd').value = alias.textContent;
-        const note_upd = document.querySelector('#note-upd').value = note.textContent;
-        document.querySelector('#id').value = data_id;
-        //console.log(alias);
+    function openDetail(elemId){
+        for(let i=0; i<elements.length; i++){
+            elements[i].style.display = "none";
+        }
+        let element = document.getElementById(elemId);
+        element.style.display = "block";
+
     }
 
-    function update(){
-        edit_wrapper.style.display = "none";
+    function openEdit(elemId){
+        element = document.getElementById(elemId);
+        console.log(element);
+        const alias = element.dataset['alias'];
+        const note = element.dataset['note'];
+        let edit_alias_input = document.querySelector("input[name='alias-edit']");
+        let edit_note_input = document.querySelector("input[name='note-edit']");
+        edit_alias_input.value = alias;
+        edit_note_input.value = note;
+        editPanel.style.display = "block";
+        const edit_note_id = document.querySelector("#note-id");
+        note_id = elemId.replace('edit-', '');
+        edit_note_id.value = note_id;
+        console.log(edit_note_id);
     }
-
-    updadte_btn.addEventListener('click', updadte);
-
-
-    
 </script>
-{%endblock%}
+{% endblock %}

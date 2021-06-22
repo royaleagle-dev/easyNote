@@ -26,6 +26,41 @@ def add_note(request):
         note.save()
         return redirect('postit:index')
 
+def mark_note(request, id):
+    
+    note = get_object_or_404(Note, id=id)
+    
+    if note.status == 'm':
+        note.status = 'u'
+    else:
+        note.status = 'm'
+    
+    note.save()
+    return redirect('postit:index')
+
+def delete_note(request, id):
+    note = get_object_or_404(Note, id=id)
+    note.delete()
+    return redirect('postit:index')
+
+
+def update_note(request):
+    if request.method == "POST":
+        alias = request.POST.get('alias-edit')
+        note = request.POST.get('note-edit')
+        id = request.POST.get('note-id')
+        note_obj = get_object_or_404(Note, id=id)
+        note_obj.alias = alias
+        note_obj.note = note
+        note_obj.save();
+        return redirect('postit:index')
+
+
+#------------------------------------------------------------
+#------Not yet tested
+#------------------------------------------------------------
+
+
 def del_all(request):
     notes = Note.objects.all()
     for i in notes:
@@ -45,16 +80,5 @@ def unmark_all(request):
         i.status = 'u'
         i.save()
     return redirect('postit:index')
-
-def update_note(request):
-    if request.method == "POST":
-        alias = request.POST.get('alias')
-        note = request.POST.get('note')
-        id = request.POST.get('id')
-        note_obj = get_object_or_404(Note, id=id)
-        note_obj.alias = alias
-        note_obj.note = note
-        note_obj.save();
-        return redirect('postit:index')
 
 

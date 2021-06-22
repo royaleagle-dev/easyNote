@@ -10,13 +10,6 @@ urlpatterns = [
     path('mark_all', views.mark_all, name = "mark_all"),
     path('unmark_all', views.unmark_all, name = "unmark_all"),
     path('update_note', views.update_note, name = "update_note"),
+    path('delete_note/<int:id>', views.delete_note, name = 'delete_note'),
+    path('mark_note/<int:id>', views.mark_note, name = 'mark_note'),
 ]
-
-
-"""
-    
-    path('edit_note', views.xxx, name = 'edit_note'),
-    path('del_note', views.xxx, name = 'del_note'),
-    path('add_fav', views.xxx, name = 'add_fav'),
-    path('favs', views.xxx, name = 'favs')
-"""

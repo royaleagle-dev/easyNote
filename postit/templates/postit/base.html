@@ -3,6 +3,7 @@
     {%load static%}
     <head>
         <title>{%block title%}{%endblock%}</title>
+        <link rel = "stylesheet" href = "{% static 'postit/fontAwesome/css/all.min.css' %}">
         <link rel = "stylesheet" href = "{% static 'postit/style.css'%}">
         <link rel = "stylesheet" href = "">
         <meta name = "author" content = "Ayotunde Okunubi">
@@ -10,103 +11,68 @@
         {%endblock%}
     </head>
     <body>
-        <div class = "container">
-            <div class = "edit-panel-wrapper" style = "display:none;">
-                <div class = "edit-panel">
-                    <h3 style = "color:white;text-align:center;">Edit Note</h3>
-                    <form method = "POST" action = "{%url 'postit:update_note'%}">
-                        {%csrf_token%}
-                        <input type = "text" name = "alias" id = "alias-upd">
-                        <input type = "text" name = "note" id = "note-upd">
-                        <input type = "hidden" name = "id" id = "id">
-                        <button id = "update-btn" type = "submit" class = "btn-block btn" style = "background-color:darkgreen;border:2px dashed white;">Update Note</button>
-                    </form>
-                </div>
+
+        <div class = "panel-wrapper" style = "display: none" id = "editPanel">
+            <span class = "fas fa-times cancel-btn" style = "background-color:lightgrey;padding:10px;border-radius:40%;position:absolute;top:0;right:5%;" id = "edit-cancel-btn"></span>
+            <div class = "edit-panel">
+                <form method = "POST" action = "{% url 'postit:update_note' %}">
+                    {%csrf_token%}
+                    <input type = "text" placeholder = "Alias" name = "alias-edit" required>
+                    <input type = "text" placeholder = "Description" name = "note-edit" required><br><br>
+                    <input type = "hidden" id = "note-id" name = "note-id">
+                    <button type = "submit" style = "">Update Note</button>
+                </form>
+            </div>
+        </div>
+
+        <div class = "panel-wrapper" style = "display: none" id = "addPanel">
+            <span class = "fas fa-times cancel-btn" style = "background-color:lightgrey;padding:10px;border-radius:40%;position:absolute;top:0;right:5%;" id = "cancel-btn"></span>
+            <div class = "add-panel">
+                <form method = "POST" action = "{% url 'postit:add_note' %}">
+                    {%csrf_token%}
+                    <input type = "text" placeholder = "Alias" name = "alias" required>
+                    <input type = "text" placeholder = "Description" name = "note" required><br><br>
+                    <button type = "submit" style = "">Add Note</button>
+                </form>
+            </div>
+        </div>
+
+        <div class = "row">
+            <div>
             </div>
 
-            <div class = "box">
-                <section style = "">
-                    {%block content%}
-                    {%endblock%}
-                </section>
-                <section style = "background:lightgrey;">
-                    <h3>Add a Note</h3>
-                    <div>
-                        <form action = "{%url 'postit:add_note'%}" method = "POST">
-                            {%csrf_token%}
-                            <input type = "text" name = "alias" placeholder = "Alias">
-                            <input type = "text" name = "note" placeholder = "Note">
-                            <input type = "submit" value = "Add note">
-                        </form>
-                    </div>
-                    <hr>
-                    <button class = "btn-block mb-5p btn" id = "del_all">Delete All</button>
-                    <button class = "btn-block mb-5p btn" id = "mark_all">Mark All</button>
-                    <button class = "btn-block mb-5p btn" id = "unmark_all">Unmark All</button>
-                    <hr>
-                </section>
+            <div style = "">
+                <button class = "new-btn" id = "add-btn"><i class = "fas fa-plus"></i></button>
+            {% block content %}
+            {% endblock %}                
             </div>
+
+            <div>
+            </div>
+
         </div>
 
         <script src = ""></script>
         <script>
-            const hex = ['a', 'b', 'c', 'd', 'e', 'f', 1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-            const hex_length = hex.length;
+            const add_btn = document.querySelector("#add-btn");
+            const cancel_btn = document.querySelector("#cancel-btn");
+            const edit_cancel_btn = document.querySelector("#edit-cancel-btn");
+            const addPanel = document.querySelector("#addPanel")
+            const editPanel = document.querySelector("#editPanel")
 
-            function generate_hex(){
-                let hex_string = '#';
-                for(let i=0; i<6; i++){
-                    let random_string = Math.floor(Math.random()*hex_length)
-                    hex_string+= hex[random_string];
-                }
-                return hex_string;
+            edit_cancel_btn.onclick = function(){
+                editPanel.style.display = "none";
             }
 
-            let notes = document.querySelectorAll(".note");
-    
-            for(let i=0; i<notes.length; i++){
-                notes[i].style.backgroundColor = generate_hex()
-                console.log(notes[i].style.backgroundColor)
+            cancel_btn.onclick = function(){
+                addPanel.style.display = "none";
             }
+            add_btn.onclick = function(){
+                addPanel.style.display = "block";
 
+            }
         </script>
-        <script>
-            const del_all_btn = document.querySelector("#del_all");
-            const mark_all_btn = document.querySelector("#mark_all")
-            const unmark_all_btn = document.querySelector("#unmark_all")
-            
-            function confirm_del_all(){
-                let msg =confirm("Are you sure you want to delete all notes?");
-                if (msg){
-                    window.location = "{%url 'postit:del_all'%}";
-                }else{
-                    window.location.reload();
-                }
-            }
-
-            function confirm_mark_all(){
-                let msg = confirm("Are you sure you want to mark all notes")
-                if(msg){
-                    window.location = "{%url 'postit:mark_all'%}";
-                }else{
-                    window.location.reload()
-                }
-            }
-
-            function confirm_unmark_all(){
-                let msg = confirm("Are you sure you want to Unmark all notes")
-                if(msg){
-                    window.location = "{%url 'postit:unmark_all'%}";
-                }else{
-                    window.location.reload()
-                }
-            }
-
-            del_all_btn.addEventListener('click', confirm_del_all);
-            mark_all_btn.addEventListener('click', confirm_mark_all);
-            unmark_all_btn.addEventListener('click', confirm_unmark_all)
-        </script>
-        {%block other_js%}
+        {%block otherJS%}
         {%endblock%}
     </body>
 </html>
